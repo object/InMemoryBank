@@ -10,18 +10,17 @@ using NUnit.Framework;
 namespace Tests
 {
     [TestFixture]
-    public class MessageProcessorTests
+    public class CommandProcessorTests
     {
         [Test]
         public void ProcessMessage_UnregisteredUser_PayerNotRegisteredException()
         {
-            var messageProcessor = new MessageProcessor(Application.Instance.ReceivedMessages,
-                                                        Application.Instance.SentMessages,
+            var commandProcessor = new CommandProcessor(Application.Instance.CommandQueue,
                                                         Application.Instance.Repository);
 
-            var message = new SmsMessage { PhoneNumber = "12345678", Message = "PAY 10 95473893" };
+            var command = new PaymentCommand {PayerNumber = "12345678", CollectorNumber = "98765432"};
 
-            Assert.Throws<PayerNotRegisteredException>(() => messageProcessor.ProcessMessage(message));
+            Assert.Throws<PayerNotRegisteredException>(() => commandProcessor.ProcessCommand(command));
         }
     }
 }

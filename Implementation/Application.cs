@@ -10,10 +10,13 @@ namespace Implementation
     public sealed class Application
     {
         static readonly Application instance = new Application();
-        private MessageProcessor messageProcessor;
+
+        private SmsGateway smsGateway;
+        private CommandProcessor commandProcessor;
 
         public readonly ApplicationQueue<SmsMessage> ReceivedMessages = new ApplicationQueue<SmsMessage>();
         public readonly ApplicationQueue<SmsMessage> SentMessages = new ApplicationQueue<SmsMessage>();
+        public readonly ApplicationQueue<PaymentCommand> CommandQueue = new ApplicationQueue<PaymentCommand>();
         public readonly Repository Repository = new Repository();
 
         static Application()
@@ -22,7 +25,8 @@ namespace Implementation
 
         Application()
         {
-            this.messageProcessor = new MessageProcessor(this.ReceivedMessages, this.SentMessages, this.Repository);
+            this.smsGateway = new SmsGateway(this.ReceivedMessages, this.SentMessages, this.CommandQueue);
+            this.commandProcessor = new CommandProcessor(this.CommandQueue, this.Repository);
         }
 
         public static Application Instance

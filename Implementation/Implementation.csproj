@@ -42,12 +42,15 @@
   <ItemGroup>
     <Compile Include="Application.cs" />
     <Compile Include="ApplicationQueue.cs" />
+    <Compile Include="Bank\CommandProcessor.cs" />
+    <Compile Include="Bank\PaymentCommand.cs" />
     <Compile Include="Bank\PaymentException.cs" />
     <Compile Include="Bank\User.cs" />
-    <Compile Include="MessageProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Bank\Repository.cs" />
+    <Compile Include="Sms\SmsGateway.cs" />
     <Compile Include="Sms\SmsMessage.cs" />
+    <Compile Include="Sms\SmsParser.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
