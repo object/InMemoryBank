@@ -24,6 +24,12 @@ namespace Specifications.Steps
             RepositoryHelper.EnsureUserDontExist(phoneNumber);
         }
 
+        [Given(@"user with phone number (\w+) is registered")]
+        public void GivenUserWithPhoneNumberIsRegistered(string phoneNumber)
+        {
+            RepositoryHelper.EnsureUserExists(phoneNumber);
+        }
+
         [When(@"user sends SMS")]
         public void WhenUserSendsSMS(Table table)
         {
