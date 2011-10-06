@@ -13,5 +13,10 @@ namespace Implementation.Bank
         {
             this.Users = new List<User>();
         }
+
+        public User FindUser(string phoneNumber)
+        {
+            return this.Users.Where(u => u.PhoneNumber == phoneNumber).SingleOrDefault();
+        }
     }
 }

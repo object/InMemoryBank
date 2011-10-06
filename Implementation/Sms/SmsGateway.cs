@@ -43,12 +43,27 @@ namespace Implementation.Sms
 
         public void Notify(PaymentNotification notification)
         {
-            var message = new SmsMessage()
-            {
-                Message = "In order to use InMemory Bank you need to register. Command is cancelled.",
-                PhoneNumber = notification.PhoneNumber
-            };
+            var formatter = GetNotificationFormatter();
+            var text = formatter[notification.Topic](notification);
+            var message = new SmsMessage() { Message = text, PhoneNumber = notification.PhoneNumber };
             SendMessage(message);
+        }
+
+        private static Dictionary<NotificationTopic, Func<PaymentNotification, string>> GetNotificationFormatter()
+        {
+            return new Dictionary<NotificationTopic, Func<PaymentNotification, string>>
+                       {
+                           {
+                               NotificationTopic.PayerNotRegistered, x => 
+                                    "In order to use InMemory Bank you need to register. Command is cancelled."
+                               },
+                           {
+                               NotificationTopic.CollectorNotRegistered, x => string.Format(
+                                   "You can not send money to unregistered user ({0}). Command is cancelled.", 
+                                    x.Command.CollectorNumber)
+                               },
+                       };
+
         }
     }
 }
