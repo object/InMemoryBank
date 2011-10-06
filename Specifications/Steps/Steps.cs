@@ -39,5 +39,12 @@ namespace Specifications.Steps
                 .ForEach(message =>
                     Assert.Contains(message, Application.Instance.SentMessages));
         }
+
+        [Then(@"no SMS should be sent to (\w+)")]
+        public void ThenNoSMSShouldBeSentToNumber(string phoneNumber)
+        {
+            Assert.AreEqual(0, Application.Instance.SentMessages.Where(
+                x => x.PhoneNumber == phoneNumber).Count());
+        }
     }
 }
