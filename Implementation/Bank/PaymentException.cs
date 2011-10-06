@@ -2,7 +2,15 @@
 
 namespace Implementation.Bank
 {
-    public class PayerNotRegisteredException : Exception
+    public class PaymentException : Exception
+    {
+    }
+
+    public class PayerNotRegisteredException : PaymentException
+    {
+    }
+
+    public class CollectorNotRegisteredException : PaymentException
     {
     }
 }
