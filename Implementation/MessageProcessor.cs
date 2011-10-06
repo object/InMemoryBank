@@ -28,7 +28,7 @@ namespace Implementation
 
         public void ProcessMessage(SmsMessage message)
         {
-            throw new NotImplementedException();
+            throw new PayerNotRegisteredException();
         }
     }
 }
