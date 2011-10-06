@@ -29,5 +29,22 @@ namespace Implementation
                 OnDequeued(this, new EventArgs());
             return result;
         }
+
+        public void SubscribeWithHandler(Action<T> action)
+        {
+            this.messageHandler = action;
+            OnEnqueued += ((sender, args) =>
+            {
+                T message = default(T);
+                if (TryDequeue(out message))
+                {
+                    try
+                    {
+                        action(message);
+                    }
+                    catch {}
+                }
+            });
+        }
     }
 }
