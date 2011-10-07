@@ -28,16 +28,11 @@ namespace Implementation.Bank
             try
             {
                 ProcessCommand(command);
+                CreateNotifications(command).ForEach(SendNotification);
             }
             catch (Exception exception)
             {
-                ThreadPool.QueueUserWorkItem(
-                    (x) =>
-                        {
-                            var notification = CreateNotification(command, exception);
-                            if (notification != null)
-                                this.notificationQueue.Enqueue(notification);
-                        });
+                SendNotification(CreateNotification(command, exception));
             }
         }
 
@@ -74,7 +69,27 @@ namespace Implementation.Bank
             if (newPayerBalance < 0)
                 throw new InsufficientFundsException();
 
-            throw new NotImplementedException();
+            payment.Payer.Balance = newPayerBalance;
+            payment.Collector.Balance += payment.Amount - payment.CollectorFee;
+            repository.Payments.Add(payment);
+        }
+
+        public List<PaymentNotification> CreateNotifications(PaymentCommand command)
+        {
+            var notifications = new List<PaymentNotification>();
+            notifications.Add(new PaymentNotification()
+                                  {
+                                      PhoneNumber = command.PayerNumber,
+                                      Topic = NotificationTopic.PaymentSent,
+                                      Command = command,
+                                  });
+            notifications.Add(new PaymentNotification()
+            {
+                PhoneNumber = command.CollectorNumber,
+                Topic = NotificationTopic.PaymentReceived,
+                Command = command,
+            });
+            return notifications;
         }
 
         public PaymentNotification CreateNotification(PaymentCommand command, Exception exception)
@@ -97,6 +112,16 @@ namespace Implementation.Bank
             }
 
             return null;
+        }
+
+        private void SendNotification(PaymentNotification notification)
+        {
+            ThreadPool.QueueUserWorkItem(
+                (x) =>
+                {
+                    if (notification != null)
+                        this.notificationQueue.Enqueue(notification);
+                });
         }
     }
 }

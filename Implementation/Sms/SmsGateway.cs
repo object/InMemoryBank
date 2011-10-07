@@ -54,6 +54,17 @@ namespace Implementation.Sms
             return new Dictionary<NotificationTopic, Func<PaymentNotification, string>>
                        {
                            {
+                               NotificationTopic.PaymentSent, x => string.Format(
+                                    "You paid {0} to {1}. Your new balance is {2}. Thank you for using InMemory Bank.",
+                                    x.Command.Amount, x.Command.Payment.Collector.PhoneNumber,
+                                    x.Command.Payment.Payer.Balance)
+                               },
+                           {
+                               NotificationTopic.PaymentReceived, x => string.Format(
+                                    "You received {0} from {1}. Your new balance is {2}. Thank you for using InMemory Bank.",
+                                    x.Command.Amount, x.Command.Payment.Payer.PhoneNumber, x.Command.Payment.Collector.Balance)
+                               },
+                           {
                                NotificationTopic.PayerNotRegistered, x => 
                                     "In order to use InMemory Bank you need to register. Command is cancelled."
                                },

@@ -143,5 +143,29 @@ namespace Tests
 
             Assert.AreEqual(NotificationTopic.InsufficientFunds, notification.Topic);
         }
+
+        [Test]
+        public void CreateNotifications_SuccessfulPayment()
+        {
+            var commandProcessor = new CommandProcessor(Application.Instance.CommandQueue,
+                                                        Application.Instance.NotificationQueue,
+                                                        Application.Instance.Repository);
+
+            string payerNumber = "12345678";
+            string collectorNumber = "98765432";
+            var command = new PaymentCommand
+            {
+                PayerNumber = payerNumber,
+                CollectorNumber = collectorNumber,
+                Amount = 10,
+                PaymentType = PaymentType.Private
+            };
+
+            var notifications = commandProcessor.CreateNotifications(command);
+
+            Assert.AreEqual(2, notifications.Count);
+            Assert.AreEqual(NotificationTopic.PaymentSent, notifications[0].Topic);
+            Assert.AreEqual(NotificationTopic.PaymentReceived, notifications[1].Topic);
+        }
     }
 }
