@@ -8,5 +8,6 @@ namespace Implementation.Bank
         public string CollectorNumber { get; set; }
         public decimal Amount { get; set; }
         public PaymentType PaymentType { get; set; }
+        public Payment Payment { get; set; }
     }
 }

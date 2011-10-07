@@ -7,5 +7,6 @@ namespace Implementation.Bank
         None,
         PayerNotRegistered,
         CollectorNotRegistered,
+        InsufficientFunds
     }
 }

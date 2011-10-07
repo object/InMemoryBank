@@ -62,6 +62,11 @@ namespace Implementation.Sms
                                    "You can not send money to unregistered user ({0}). Command is cancelled.", 
                                     x.Command.CollectorNumber)
                                },
+                           {
+                               NotificationTopic.InsufficientFunds, x => string.Format(
+                                   "Not enough funds to pay {0} to {1}. Your current balance is {2}. Command is cancelled.", 
+                                    x.Command.Amount, x.Command.CollectorNumber, x.Command.Payment.Payer.Balance)
+                               },
                        };
 
         }

@@ -51,6 +51,29 @@ namespace Implementation.Bank
             if (collector == null)
                 throw new CollectorNotRegisteredException();
 
+            command.Payment = new Payment()
+            {
+                TransferTime = DateTime.Now,
+                PaymentType = command.PaymentType,
+                Amount = command.Amount,
+                Payer = payer,
+                Collector = collector,
+                PayerFee = this.repository.GetPayerFee(command.PaymentType),
+                CollectorFee = this.repository.GetCollectorFee(command.PaymentType)
+            };
+
+            lock (repository.Payments)
+            {
+                RegisterPayment(command.Payment);
+            }
+        }
+
+        private void RegisterPayment(Payment payment)
+        {
+            var newPayerBalance = payment.Payer.Balance - payment.Amount - payment.PayerFee;
+            if (newPayerBalance < 0)
+                throw new InsufficientFundsException();
+
             throw new NotImplementedException();
         }
 
@@ -60,6 +83,7 @@ namespace Implementation.Bank
                              {
                                  {typeof (PayerNotRegisteredException), NotificationTopic.PayerNotRegistered},
                                  {typeof (CollectorNotRegisteredException), NotificationTopic.CollectorNotRegistered},
+                                 {typeof (InsufficientFundsException), NotificationTopic.InsufficientFunds},
                              };
 
             if (topics.ContainsKey(exception.GetType()))

@@ -82,5 +82,41 @@ namespace Tests
 
             Assert.AreEqual(NotificationTopic.PayerNotRegistered, notification.Topic);
         }
+
+        [Test]
+        public void CreateNotification_CollectorNotRegisteredException()
+        {
+            var commandProcessor = new CommandProcessor(Application.Instance.CommandQueue,
+                                                        Application.Instance.NotificationQueue,
+                                                        Application.Instance.Repository);
+
+            var command = new PaymentCommand { PayerNumber = "12345678", CollectorNumber = "98765432" };
+
+            var notification = commandProcessor.CreateNotification(command, new CollectorNotRegisteredException());
+
+            Assert.AreEqual(NotificationTopic.CollectorNotRegistered, notification.Topic);
+        }
+
+        [Test]
+        public void CreateNotification_InsufficientFundsException()
+        {
+            var commandProcessor = new CommandProcessor(Application.Instance.CommandQueue,
+                                                        Application.Instance.NotificationQueue,
+                                                        Application.Instance.Repository);
+
+            string payerNumber = "12345678";
+            string collectorNumber = "98765432";
+            var command = new PaymentCommand
+            {
+                PayerNumber = payerNumber,
+                CollectorNumber = collectorNumber,
+                Amount = 10,
+                PaymentType = PaymentType.Private
+            };
+
+            var notification = commandProcessor.CreateNotification(command, new InsufficientFundsException());
+
+            Assert.AreEqual(NotificationTopic.InsufficientFunds, notification.Topic);
+        }
     }
 }
