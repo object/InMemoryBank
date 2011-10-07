@@ -47,6 +47,29 @@ namespace Tests
         }
 
         [Test]
+        public void ProcessCommand_InsufficientBalance_InsufficientFundsException()
+        {
+            var commandProcessor = new CommandProcessor(Application.Instance.CommandQueue,
+                                                        Application.Instance.NotificationQueue,
+                                                        Application.Instance.Repository);
+
+            string payerNumber = "12345678";
+            string collectorNumber = "98765432";
+            Application.Instance.Repository.Users.Add(new User() { PhoneNumber = payerNumber });
+            Application.Instance.Repository.Users.Add(new User() { PhoneNumber = collectorNumber });
+
+            var command = new PaymentCommand
+                              {
+                                  PayerNumber = payerNumber,
+                                  CollectorNumber = collectorNumber,
+                                  Amount = 10,
+                                  PaymentType = PaymentType.Private
+                              };
+
+            Assert.Throws<InsufficientFundsException>(() => commandProcessor.ProcessCommand(command));
+        }
+
+        [Test]
         public void CreateNotification_PayerNotRegisteredException()
         {
             var commandProcessor = new CommandProcessor(Application.Instance.CommandQueue,

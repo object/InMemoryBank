@@ -13,4 +13,8 @@ namespace Implementation.Bank
     public class CollectorNotRegisteredException : PaymentException
     {
     }
+
+    public class InsufficientFundsException : PaymentException
+    {
+    }
 }
