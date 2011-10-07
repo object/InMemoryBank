@@ -70,6 +70,31 @@ namespace Tests
         }
 
         [Test]
+        public void ProcessCommand_Success()
+        {
+            var commandProcessor = new CommandProcessor(Application.Instance.CommandQueue,
+                                                        Application.Instance.NotificationQueue,
+                                                        Application.Instance.Repository);
+
+            string payerNumber = "12345678";
+            string collectorNumber = "98765432";
+            Application.Instance.Repository.Users.Add(new User() { PhoneNumber = payerNumber, Balance = 100 });
+            Application.Instance.Repository.Users.Add(new User() { PhoneNumber = collectorNumber, Balance = 100 });
+
+            var command = new PaymentCommand
+            {
+                PayerNumber = payerNumber,
+                CollectorNumber = collectorNumber,
+                Amount = 10,
+                PaymentType = PaymentType.Private
+            };
+
+            commandProcessor.ProcessCommand(command);
+            Assert.AreEqual(90, Application.Instance.Repository.FindUser(payerNumber).Balance);
+            Assert.AreEqual(110, Application.Instance.Repository.FindUser(collectorNumber).Balance);
+        }
+
+        [Test]
         public void CreateNotification_PayerNotRegisteredException()
         {
             var commandProcessor = new CommandProcessor(Application.Instance.CommandQueue,
