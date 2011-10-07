@@ -15,21 +15,8 @@ using Specifications.Infrastructure;
 namespace Specifications.Steps
 {
     [Binding]
-
-    class Steps
+    class SmsSteps
     {
-        [Given(@"user with phone number (\w+) is not registered")]
-        public void GivenUserWithPhoneNumberIsNotRegistered(string phoneNumber)
-        {
-            RepositoryHelper.EnsureUserDontExist(phoneNumber);
-        }
-
-        [Given(@"user with phone number (\w+) is registered")]
-        public void GivenUserWithPhoneNumberIsRegistered(string phoneNumber)
-        {
-            RepositoryHelper.EnsureUserExists(phoneNumber);
-        }
-
         [When(@"user sends SMS")]
         public void WhenUserSendsSMS(Table table)
         {

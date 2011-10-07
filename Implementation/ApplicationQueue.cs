@@ -46,5 +46,17 @@ namespace Implementation
                 }
             });
         }
+
+        public void Clear()
+        {
+            lock (this)
+            {
+                T message;
+                while (this.Count > 0)
+                {
+                    TryDequeue(out message);
+                }
+            }
+        }
     }
 }

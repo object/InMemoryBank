@@ -16,12 +16,21 @@ namespace Specifications.Infrastructure
                  .ForEach(u =>
                      u.PhoneNumber = Guid.NewGuid().ToString());
         }
-
-        internal static void EnsureUserExists(string phoneNumber)
+        internal static void EnsureUserExists(User user)
         {
-            EnsureUserDontExist(phoneNumber);
+            Application.Instance.Repository.Users
+                .Where(u => u.PhoneNumber == user.PhoneNumber).ToList()
+                .ForEach(u =>
+                    u.PhoneNumber = Guid.NewGuid().ToString());
+            Application.Instance.Repository.Users.Add(user);
+        }
 
-            Application.Instance.Repository.Users.Add(new User() {PhoneNumber = phoneNumber});
+        internal static void SetPaymentFees(IEnumerable<PaymentFee> fees)
+        {
+            Application.Instance.Repository.Fees.Clear();
+            fees.ToList()
+                .ForEach(x =>
+                    Application.Instance.Repository.Fees.Add(x));
         }
     }
 }
