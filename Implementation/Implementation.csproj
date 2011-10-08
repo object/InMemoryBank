@@ -43,9 +43,11 @@
     <Compile Include="Application.cs" />
     <Compile Include="ApplicationQueue.cs" />
     <Compile Include="Bank\CommandProcessor.cs" />
+    <Compile Include="Bank\NotificationTopic.cs" />
     <Compile Include="Bank\PaymentCommand.cs" />
     <Compile Include="Bank\PaymentException.cs" />
     <Compile Include="Bank\User.cs" />
+    <Compile Include="PaymentNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Bank\Repository.cs" />
     <Compile Include="Sms\SmsGateway.cs" />
