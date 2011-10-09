@@ -44,7 +44,7 @@
     <Compile Include="ApplicationQueue.cs" />
     <Compile Include="Bank\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repository.cs" />
+    <Compile Include="Bank\Repository.cs" />
     <Compile Include="Sms\SmsMessage.cs" />
   </ItemGroup>
   <ItemGroup />
