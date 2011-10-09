@@ -16,6 +16,7 @@ namespace Implementation.Sms
                 PayerNumber = message.PhoneNumber,
                 CollectorNumber = items[2],
                 Amount = decimal.Parse(items[1]),
+                PaymentType = PaymentType.Private
             };
             return command;
         }
