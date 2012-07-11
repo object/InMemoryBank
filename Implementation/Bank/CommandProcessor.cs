@@ -23,7 +23,7 @@ namespace Implementation.Bank
             this.commandQueue.SubscribeWithHandler(CommandHandler);
         }
 
-        private void CommandHandler(PaymentCommand command)
+        private bool CommandHandler(PaymentCommand command)
         {
             try
             {
@@ -34,6 +34,7 @@ namespace Implementation.Bank
             {
                 SendNotification(CreateNotification(command, exception));
             }
+            return true;
         }
 
         public void ProcessCommand(PaymentCommand command)

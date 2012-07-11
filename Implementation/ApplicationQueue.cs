@@ -8,7 +8,7 @@ namespace Implementation
 {
     public class ApplicationQueue<T> : ConcurrentQueue<T>
     {
-        private Action<T> messageHandler;
+        private Func<T,bool> messageHandler;
 
         public event EventHandler<EventArgs> OnEnqueued;
         public event EventHandler<EventArgs> OnDequeued;
@@ -30,7 +30,7 @@ namespace Implementation
             return result;
         }
 
-        public void SubscribeWithHandler(Action<T> action)
+        public void SubscribeWithHandler(Func<T,bool> action)
         {
             this.messageHandler = action;
             OnEnqueued += ((sender, args) =>
@@ -40,7 +40,10 @@ namespace Implementation
                 {
                     try
                     {
-                        action(message);
+                        if (!this.messageHandler(message))
+                        {
+                            base.Enqueue(message);
+                        }
                     }
                     catch {}
                 }

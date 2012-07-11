@@ -52,6 +52,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\SpecFlow.1.7.1\lib\net35\TechTalk.SpecFlow.dll</HintPath>
     </Reference>
+    <Reference Include="TypeMock, Version=7.0.7.0, Culture=neutral, PublicKeyToken=3dae460033b8d8e2, processorArchitecture=MSIL" />
+    <Reference Include="Typemock.ArrangeActAssert, Version=7.0.7.0, Culture=neutral, PublicKeyToken=3dae460033b8d8e2, processorArchitecture=MSIL" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">

@@ -26,14 +26,16 @@ namespace Implementation.Sms
             this.notificationQueue = notificationQueue;
 
             this.incomingMessageQueue.SubscribeWithHandler(ReceiveMessage);
+            this.outgoingMessageQueue.SubscribeWithHandler(MessageDispatcher.DispatchMessage);
             this.notificationQueue.SubscribeWithHandler(Notify);
         }
 
-        public void ReceiveMessage(SmsMessage message)
+        public bool ReceiveMessage(SmsMessage message)
         {
             var parser = new SmsParser();
             var command = parser.Parse(message);
             ThreadPool.QueueUserWorkItem((x) => this.commandQueue.Enqueue(command));
+            return true;
         }
 
         public void SendMessage(SmsMessage message)
@@ -41,12 +43,13 @@ namespace Implementation.Sms
             ThreadPool.QueueUserWorkItem((x) => this.outgoingMessageQueue.Enqueue(message));
         }
 
-        public void Notify(PaymentNotification notification)
+        public bool Notify(PaymentNotification notification)
         {
             var formatter = GetNotificationFormatter();
             var text = formatter[notification.Topic](notification);
             var message = new SmsMessage() { Message = text, PhoneNumber = notification.PhoneNumber };
             SendMessage(message);
+            return true;
         }
 
         private static Dictionary<NotificationTopic, Func<PaymentNotification, string>> GetNotificationFormatter()
